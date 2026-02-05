@@ -5,10 +5,6 @@ pipeline {
         nodejs 'nodejs'
     }
 
-    environment {
-        NODE_ENV = 'production'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -33,23 +29,11 @@ pipeline {
             }
         }
 
-        stage('Audit (Optional)') {
-            steps {
-                sh 'npm audit fix || true'
-            }
-        }
-
-        stage('Build UI') {
-            steps {
-                sh 'npm run build'
-            }
-        }
-
-        stage('Start App with PM2') {
+        stage('Start Application with PM2') {
             steps {
                 sh '''
                 pm2 delete Trading-UI || true
-                pm2 --name Trading-UI start npm -- start
+                pm2 start npm --name Trading-UI -- start
                 pm2 save
                 '''
             }
@@ -58,13 +42,11 @@ pipeline {
 
     post {
         success {
-            echo '✅ Trading-UI deployed successfully'
+            echo '✅ Trading-UI is running'
         }
         failure {
             echo '❌ Pipeline failed'
         }
-        always {
-            cleanWs()
-        }
     }
 }
+
