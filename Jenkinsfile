@@ -35,9 +35,9 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test (non-blocking)') {
             steps {
-                sh 'npm test || echo "No tests found"'
+                sh 'npm test -- --watch=false || echo "Tests failed but pipeline continues"'
             }
         }
     }
