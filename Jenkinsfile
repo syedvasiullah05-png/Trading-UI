@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     tools {
-    nodejs 'node18'
-}
+        nodejs 'node18'
+    }
+
     stages {
 
         stage('Checkout') {
@@ -26,6 +27,9 @@ pipeline {
         }
 
         stage('Build') {
+            environment {
+                NODE_OPTIONS = '--openssl-legacy-provider'
+            }
             steps {
                 sh 'CI=false npm run build'
             }
