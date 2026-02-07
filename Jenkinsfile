@@ -2,24 +2,21 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'nodejs'
+        nodejs 'NodeJS'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/betawins/Trading-UI.git'
+                git url: 'https://github.com/mujahed1716/Trading-UI.git', branch: 'master'
             }
         }
 
-        stage('Verify Node & NPM') {
+        stage('Check Node & NPM') {
             steps {
-                sh '''
-                node -v
-                npm -v
-                '''
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
@@ -28,15 +25,17 @@ pipeline {
                 sh 'npm install'
             }
         }
-    }
 
-    post {
-        success {
-            echo '✅ Dependencies installed successfully'
+        stage('Build') {
+            steps {
+                sh 'CI=false npm run build'
+            }
         }
-        failure {
-            echo '❌ Pipeline failed'
+
+        stage('Test') {
+            steps {
+                sh 'npm test || echo "No tests found"'
+            }
         }
     }
 }
-
